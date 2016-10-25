@@ -1,0 +1,147 @@
+
+<table ng-show="detail === false" ng-repeat="item in tanks" class="table table-striped">
+    <thead>
+    <tr>
+        <th colspan="4">Gärtank {{$index}}</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <tr>
+           <td>Bier</td>
+            <td ng-bind="item.beer"></td>
+            <td>( Soll</td>
+            <td ng-bind="item.target + ' )'"></td>
+        </tr>
+        <tr>
+            <td>Luft</td>
+            <td ng-bind="item.air"></td>
+            <td></td>
+            <td> <button ng-click="getdetail($index)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<div ng-show="detail === true">
+    <span><b>Gärtank {{currenttank}} läuft seit {{ convertdays(runningsince(currenttank)) }}D / {{ converthrs(runningsince(currenttank)) }}H / {{ convertmin(runningsince(currenttank)) }}M</b></span>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Step</th>
+            <th>Tage</th>
+            <th>Stunden</th>
+            <th>Temperatur</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="item in tanks[currenttank].targets">
+            <td>{{ $index }}</td>
+            <td ng-bind="convertdays(item.ts) + ' D' "></td>
+            <td ng-bind="converthrs(item.ts) + ' H'"></td>
+
+            <td ng-bind="item.temp + '°C'"></td>
+            <td>
+                <button ng-click="getedit($index)"><span class="glyphicon glyphicon-wrench"></span></button>
+            </td>
+            <td>
+                <button ng-click="remove($index)"><span class="glyphicon glyphicon-remove"></span></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <button ng-click="getadd()"><span class="glyphicon glyphicon-plus-sign"></span></button>
+    <hr>
+    <button ng-hide="tanks[currenttank].starttime"><span class="glyphicon glyphicon-play"></span></button>
+    <button ng-show="tanks[currenttank].starttime"><span class="glyphicon glyphicon-stop"></span></button>
+    <button ng-click="getdetail(false)" class="glyphicon glyphicon-saved"></button>
+</div>
+
+
+<div ng-show="edit === true" >
+    <table class="table table-striped">
+    <thead>
+      <tr>
+          <th colspan="3">Edit</th>
+          <th></th>
+      </tr>
+    </thead>
+        <tbody>
+            <tr>
+                <td ng-bind="target.temp + '°C'"></td>
+                <td>
+                    <button ng-click="tempup()"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                </td>
+                <td>
+                    <button ng-click="tempdown()"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                </td>
+            </tr>
+            <tr>
+                <td ng-bind="convertdays(target.ts) + ' D'"></td>
+                <td>
+                    <button ng-click="daysup()"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                </td>
+                <td>
+                    <button ng-click="daysdown()"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                </td>
+            </tr>
+            <tr>
+                <td ng-bind="converthrs(target.ts) + ' H'"></td>
+                <td>
+                    <button ng-click="hrsup()"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                </td>
+                <td>
+                    <button ng-click="hrsdown()"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a id="otherbutton" ng-click="getedit(false)" class="btn btn-primary">zurück</a>
+</div>
+
+<div ng-show="add === true" >
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th colspan="3">Add</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td ng-bind="target.temp + '°C'"></td>
+            <td>
+                <button ng-click="tempup()"><span class="glyphicon glyphicon-chevron-up"></span></button>
+            </td>
+            <td>
+                <button ng-click="tempdown()"><span class="glyphicon glyphicon-chevron-down"></span></button>
+            </td>
+        </tr>
+        <tr>
+            <td ng-bind="convertdays(target.ts) + ' D'"></td>
+            <td>
+                <button ng-click="daysup()"><span class="glyphicon glyphicon-chevron-up"></span></button>
+            </td>
+            <td>
+                <button ng-click="daysdown()"><span class="glyphicon glyphicon-chevron-down"></span></button>
+            </td>
+        </tr>
+        <tr>
+            <td ng-bind="converthrs(target.ts) + ' H'"></td>
+            <td>
+                <button ng-click="hrsup()"><span class="glyphicon glyphicon-chevron-up"></span></button>
+            </td>
+            <td>
+                <button ng-click="hrsdown()"><span class="glyphicon glyphicon-chevron-down"></span></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a id="newbutton" ng-click="addtotarget()" class="btn btn-primary">zurück (speichern)</a>
+</div>
+
+
