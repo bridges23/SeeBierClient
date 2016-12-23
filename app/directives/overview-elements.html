@@ -54,11 +54,11 @@
         </tr>
         </tbody>
     </table>
-    <button ng-click="getadd()"><span class="glyphicon glyphicon-plus-sign"></span></button>
+    <button ng-click="getadd()"><span class="btn btn-primary">Stufe hinzufügen</span></button>
     <hr>
-    <button ng-hide="tanks[currenttank].starttime" ng-click="play(true)"><span class="glyphicon glyphicon-play"></span></button>
-    <button ng-show="tanks[currenttank].starttime" ng-click="play(false)"><span class="glyphicon glyphicon-stop"></span></button>
-    <button ng-click="getdetail(false)" class="glyphicon glyphicon-saved"></button>
+    <button ng-hide="tanks[currenttank].starttime" ng-click="play(true)"><span class="btn btn-primary">Start</span></button>
+    <button ng-show="tanks[currenttank].starttime" ng-click="play(false)"><span class="btn btn-primary"></span>Stop</button>
+    <button ng-click="getdetail(false)" class="btn btn-primary">zurück (Speichern)</button>
 </div>
 
 
@@ -100,7 +100,7 @@
             </tr>
         </tbody>
     </table>
-    <a id="otherbutton" ng-click="getedit(false)" class="btn btn-primary">zurück (speichern)</a>
+    <a id="otherbutton" ng-click="getedit(false)" class="btn btn-primary">Speichern (zurück)</a>
 </div>
 
 <div ng-show="add === true" >
