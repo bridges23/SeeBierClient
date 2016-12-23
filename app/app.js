@@ -85,6 +85,7 @@
     var file;
     var tanks = [];
     var detail;
+    var lock;
 
 
 
@@ -505,11 +506,34 @@
 
     }]);
 
-    app.controller('startController', ['$scope', '$http', '$location', '$rootScope', 'storage', function ($scope, $http, $location, $rootScope, storage) {
+
+
+    app.controller('startController', ['$scope', '$timeout', '$http', '$location', '$rootScope', 'storage', function ($scope, $timeout, $http, $location, $rootScope, storage) {
+
+            $scope.counter = 0;
+            var updateCounter = function() {
+                $scope.counter++;
+                $timeout(updateCounter, 1000);
+                $scope.remaining = 300 - $scope.counter;
+                if ($scope.counter == 300) {
+                    return $scope.getdetail(false);
+                }
+            };
+            if ($scope.lock === true) {
+                    updateCounter();
+            }
 
         tanks = [];
 
-        tanks.push({
+
+
+        $http.get("http://localhost/post_read.php")
+            .then(function(response) {
+                $scope.tanks = response.data;
+            });
+
+
+  /*      tanks.push({
                 starttime: 1377420390,
                 beer: "21°C",
                 air: "20°C",
@@ -520,6 +544,8 @@
                     { ts: 90263, temp: 20 }]
             }
         );
+
+
         tanks.push({
                 starttime: null,
                 beer: "32°C",
@@ -530,37 +556,49 @@
                     { ts: 30, temp: 14 },
                     { ts: 20, temp: 13 }]
             }
-        );
+        );*/
+
+
 
         $scope.detail = false;
         $scope.edit = false;
 
-        $scope.tanks = tanks;
+     //   $scope.tanks = tanks;
+
 
         $scope.getdetail = function ($index) {
             if ($index === false) {
-                //TODO http post here (synchronous)
+                $scope.lock = false;
+                $scope.counter = 0;
+
+                $http.post("http://localhost/post_save.php", $scope.tanks);
+
                 return $scope.detail = false;
             }
             $scope.currenttank = $index;
-            return $scope.detail = true;
+            $scope.lock = true;
+
+            updateCounter();
+            return $scope.detail = true
+
 
         };
 
         $scope.getedit = function ($row) {
             if ($row === false) {
+                $http.post("http://localhost/post_save.php", $scope.tanks);
                 $scope.edit = false;
                 return $scope.detail = true;
             }
-                $scope.target = $scope.tanks[$scope.currenttank].targets[$row];
+                $scope.target = $scope.tanks[$scope.currenttank].steps[$row];
                 $scope.detail = null;
                 return $scope.edit = true;
         };
 
         $scope.getadd = function () {
-            $scope.tanks[$scope.currenttank].targets.push({ ts: 0, temp: 0 });
-            var targetid = $scope.tanks[$scope.currenttank].targets.length - 1;
-            $scope.target = $scope.tanks[$scope.currenttank].targets[targetid];
+            $scope.tanks[$scope.currenttank].steps.push({ step_duration: 0, temp: 0 });
+            var targetid = $scope.tanks[$scope.currenttank].steps.length - 1;
+            $scope.target = $scope.tanks[$scope.currenttank].steps[targetid];
             $scope.detail = null;
             return $scope.add = true;
         };
@@ -571,39 +609,66 @@
             }
         };
 
+        $scope.play = function ($bool) {
+                if ($bool === false) {
+                    var r = confirm("Gärtank zurücksetzen? Bitte bestätigen!");
+                    if (r == true) {
+                        $scope.tanks[$scope.currenttank].starttime = null;
+                        $http.post("http://localhost/post_stop.php", $scope.tanks);
+                        return $scope.detail = false;
+                    }
+                } else {
+                    $scope.tanks[$scope.currenttank].starttime = Math.round(+new Date()/1000);
+                    $http.post("http://localhost/post_start.php", $scope.tanks);
+                    return $scope.detail = false;
+
+                }
+        };
+
+        $scope.getstatus = function ($index) {
+            if ($scope.tanks[$index].starttime === null) {
+                return 'stopped';
+            } else {
+                return 'running';
+            }
+        };
+
         $scope.addtotarget = function () {
-            //TODO http post here (synchronous)
+
+            $http.post("http://localhost/post_save.php", $scope.tanks);
+
             $scope.add = false;
+
             return $scope.detail = true;
 
         };
 
         $scope.remove = function ($index) {
-           $scope.tanks[$scope.currenttank].targets.splice($index, 1);
+           $scope.tanks[$scope.currenttank].steps.splice($index, 1);
         };
 
         $scope.tempup = function () {
-                return $scope.target.temp += 1;
+            return  $scope.target.step_temperature = Number($scope.target.step_temperature) + 1/2;
         };
 
         $scope.tempdown = function () {
-            return $scope.target.temp -= 1;
+            return  $scope.target.step_temperature = Number($scope.target.step_temperature) - 1/2;
         };
 
         $scope.daysup = function () {
-            return $scope.target.ts += 86400;
+            return $scope.target.step_duration += 86400;
         };
 
         $scope.daysdown = function () {
-            return $scope.target.ts -= 86400;
+            return $scope.target.step_duration -= 86400;
         };
 
         $scope.hrsup = function () {
-            return $scope.target.ts += 3600;
+            return $scope.target.step_duration += 3600;
         };
 
         $scope.hrsdown = function () {
-            return $scope.target.ts -= 3600;
+            return $scope.target.step_duration -= 3600;
         };
 
         $scope.convertdays = function ($ts) {
