@@ -1,10 +1,7 @@
 <?php
 
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "seebier";
+include 'credentials.php';
 
 
 // Create connection

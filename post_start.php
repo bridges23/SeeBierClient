@@ -1,11 +1,6 @@
 <?php
 
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "seebier";
-
+include 'credentials.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
