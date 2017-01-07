@@ -527,7 +527,7 @@
 
 
 
-        $http.get("http://localhost/post_read.php")
+        $http.get("post_read.php")
             .then(function(response) {
                 $scope.tanks = response.data;
             });
@@ -571,7 +571,7 @@
                 $scope.lock = false;
                 $scope.counter = 0;
 
-                $http.post("http://localhost/post_save.php", $scope.tanks);
+                $http.post("post_save.php", $scope.tanks);
 
                 return $scope.detail = false;
             }
@@ -586,7 +586,7 @@
 
         $scope.getedit = function ($row) {
             if ($row === false) {
-                $http.post("http://localhost/post_save.php", $scope.tanks);
+                $http.post("post_save.php", $scope.tanks);
                 $scope.edit = false;
                 return $scope.detail = true;
             }
@@ -619,7 +619,7 @@
                     }
                 } else {
                     $scope.tanks[$scope.currenttank].starttime = Math.round(+new Date()/1000);
-                    $http.post("http://localhost/post_start.php", $scope.tanks);
+                    $http.post("post_start.php", $scope.tanks);
                     return $scope.detail = false;
 
                 }
@@ -635,7 +635,7 @@
 
         $scope.addtotarget = function () {
 
-            $http.post("http://localhost/post_save.php", $scope.tanks);
+            $http.post("post_save.php", $scope.tanks);
 
             $scope.add = false;
 
