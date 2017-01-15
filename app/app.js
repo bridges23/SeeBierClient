@@ -558,8 +558,6 @@
             }
         );*/
 
-
-
         $scope.detail = false;
         $scope.edit = false;
 
@@ -596,7 +594,7 @@
         };
 
         $scope.getadd = function () {
-            $scope.tanks[$scope.currenttank].steps.push({ step_duration: 0, temp: 0 });
+            $scope.tanks[$scope.currenttank].steps.push({ step_duration: 0, step_temperature: 0 });
             var targetid = $scope.tanks[$scope.currenttank].steps.length - 1;
             $scope.target = $scope.tanks[$scope.currenttank].steps[targetid];
             $scope.detail = null;
