@@ -612,7 +612,7 @@
                     var r = confirm("Gärtank zurücksetzen? Bitte bestätigen!");
                     if (r == true) {
                         $scope.tanks[$scope.currenttank].starttime = null;
-                        $http.post("http://localhost/post_stop.php", $scope.tanks);
+                        $http.post("post_stop.php", $scope.tanks);
                         return $scope.detail = false;
                     }
                 } else {
